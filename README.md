@@ -66,7 +66,6 @@ main = "src/index.ts"
 # Example: wrangler secret put FIREBASE_API_KEY
 # Example: wrangler secret put LLM_API_KEY
 ```
-
 **Important**: Never store API keys directly in `wrangler.toml` or commit them to version control. Always use Wrangler secrets for sensitive information.
 
 ### Local Development Environment
@@ -85,7 +84,6 @@ The `src/firebase.ts` file handles the initialization of Firebase services. It u
 2. Enable Firestore in database mode
 3. Register a web app in your Firebase project
 4. Copy the Firebase configuration and update `src/firebase.ts`:
-
 ```typescript
 export function initializeFirebase(env: Env) {
   const app = initializeApp({
@@ -99,7 +97,6 @@ export function initializeFirebase(env: Env) {
   return { app, auth: getAuth(app), db: getFirestore(app) };
 }
 ```
-
 **Important**: 
 - Only the `apiKey` should be stored as a Wrangler secret
 - Other configuration values (authDomain, projectId, etc.) are public and can be safely committed
@@ -114,7 +111,7 @@ service cloud.firestore {
     match /itineraries/{jobId} {
       allow read: if request.auth.uid == resource.data.createdBy;
       allow create: if request.auth != null
-                      && request.resource.data.status == 'processing'
+                      && request.resource.data.status == "processing"
                       && request.resource.data.destination is string
                       && request.resource.data.durationDays is number
                       && request.resource.data.createdAt == request.time
@@ -122,7 +119,7 @@ service cloud.firestore {
                       && request.resource.data.itinerary.size() == 0
                       && request.resource.data.error == null;
       allow update: if request.auth.uid == resource.data.createdBy
-                      && (request.resource.data.status == 'completed' || request.resource.data.status == 'failed')
+                      && (request.resource.data.status == "completed" || request.resource.data.status == "failed")
                       && request.resource.data.completedAt == request.time
                       && request.resource.data.destination == resource.data.destination; 
     }
@@ -139,6 +136,15 @@ These rules ensure:
 ## API Usage
 ### Request
 Send a POST request to the worker endpoint:
+
+**Example using your deployed API:**
+```bash
+curl -X POST "https://ai-itinerary-worker.a-abbasi5775.workers.dev" \
+  -H "Content-Type: application/json" \
+  -d '{"destination":"Japan, Tokyo","durationDays":1}'
+```
+
+**Generic example:**
 ```bash
 curl -X POST https://ai-itinerary-worker.your-subdomain.workers.dev/ \
   -H "Content-Type: application/json" \
@@ -184,7 +190,6 @@ The application follows an asynchronous processing pattern:
 ├── worker-configuration.d.ts # Cloudflare Worker types
 └── wrangler.toml             # Worker configuration
 ```
-
 **Note**: The `node_modules` directory is not shown as it contains installed dependencies and is excluded from version control.
 
 ## Prompt Design
