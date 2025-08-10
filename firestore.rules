@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /itineraries/{jobId} {
+      // Allow read access to anyone with a valid auth token (anonymous or otherwise)
+      allow read: if request.auth != null;
+
+      // Allow creation of new itinerary documents
+      allow create: if request.auth != null
+                    && request.resource.data.status == 'processing'
+                    && request.resource.data.destination is string
+                    && request.resource.data.destination.size() <= 100
+                    && request.resource.data.durationDays is number
+                    && request.resource.data.durationDays >= 1
+                    && request.resource.data.durationDays <= 30
+                    && request.resource.data.createdAt == request.time
+                    && request.resource.data.itinerary.size() == 0
+                    && request.resource.data.error == null
+                    && request.resource.data.completedAt == null;
+
+      // Allow updates to status, itinerary, completedAt, and error fields
+      allow update: if request.auth != null
+                    && request.resource.data.status in ['completed', 'failed']
+                    && request.resource.data.completedAt == request.time
+                    && request.resource.data.destination == resource.data.destination
+                    && request.resource.data.durationDays == resource.data.durationDays
+                    && request.resource.data.createdAt == resource.data.createdAt;
+    }
+  }
+}

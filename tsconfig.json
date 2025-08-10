@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "esnext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "types": ["node", "@cloudflare/workers-types"],
+    "allowJs": true
+  },
+  "include": ["*.ts", "src/**/*.ts", "test-firebase.ts", "src/firebase-config.ts"],
+  "exclude": ["node_modules"]
+}

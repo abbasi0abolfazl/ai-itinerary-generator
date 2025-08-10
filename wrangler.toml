@@ -1,0 +1,10 @@
+name = "ai-itinerary-worker"
+compatibility_date = "2025-08-09"
+main = "src/index.ts"
+
+# Environment variables should be set via Cloudflare dashboard or wrangler secrets
+# Example: wrangler secret put FIREBASE_API_KEY
+# Example: wrangler secret put LLM_API_KEY
+# [vars]
+# FIREBASE_API_KEY= 
+# LLM_API_KEY= 
